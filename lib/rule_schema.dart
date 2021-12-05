@@ -44,6 +44,18 @@ class RuleSchemas {
       variable,
       plus,
       if_,
+      and,
+      smallerThan,
+      smallerThanOrEqual,
+      greaterThan,
+      greaterThanOrEqual,
+      in_,
+      after,
+      before,
+      notAfter,
+      notBefore,
+      not,
+      plusTime,
     ];
     final logicChildren = [
       ...hasLogicChildren,
@@ -86,7 +98,19 @@ class RuleSchemas {
     reduce,
     variable,
     plus,
-    if_
+    if_,
+    and,
+    smallerThan,
+    smallerThanOrEqual,
+    greaterThan,
+    greaterThanOrEqual,
+    in_,
+    after,
+    before,
+    notAfter,
+    notBefore,
+    not,
+    plusTime,
   ];
 
   static final baseOptions = [
@@ -131,4 +155,16 @@ class RuleSchemas {
   static final variable = RuleSchema('var', 'Variable');
   static final plus = RuleSchema('+', 'Plus');
   static final if_ = RuleSchema('if', 'If');
+  static final and = RuleSchema('and', 'And');
+  static final smallerThan = RuleSchema('<', 'Smaller than');
+  static final smallerThanOrEqual = RuleSchema('<=', 'Smaller than or equal');
+  static final greaterThan = RuleSchema('>', 'Greater than');
+  static final greaterThanOrEqual = RuleSchema('>=', 'Greater than or equal');
+  static final in_ = RuleSchema('in', 'In');
+  static final after = RuleSchema('after', 'After');
+  static final before = RuleSchema('before', 'Before');
+  static final notAfter = RuleSchema('not-after', 'Not after');
+  static final notBefore = RuleSchema('not-before', 'Not before');
+  static final not = RuleSchema('!', 'Not');
+  static final plusTime = RuleSchema('plusTime', 'Time plus');
 }

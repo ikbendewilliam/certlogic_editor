@@ -20,6 +20,7 @@ class EditorScreenState extends State<EditorScreen> {
 
   EditorScreenState() {
     jsonController.text = exampleRule;
+    jsonController.addListener(_onChangeJson);
     data = jsonDecode(jsonController.value.text);
   }
 
