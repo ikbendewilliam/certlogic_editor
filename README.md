@@ -2,7 +2,7 @@
 
 visualize and edit certlogic rules
 
-You can use it [here](https://ikbendewilliam.github.io/certlogic_editor/build/web/#/)
+**You can use it [here](https://ikbendewilliam.github.io/certlogic_editor/build/web/#/)**
 
 ## Work in progress
 
