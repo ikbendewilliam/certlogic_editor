@@ -1,14 +1,16 @@
 # certlogic_editor
 
-visualize and edit certlogic rules
-
-**You can use it [here](https://ikbendewilliam.github.io/certlogic_editor/build/web/#/)**
+**[You can use it here](https://ikbendewilliam.github.io/certlogic_editor/build/web/#/)**
 
 ## Work in progress
 
-This project is not finished. The following features are not implemented yet or are not working correctly
-- When updating the data using the UI, json structure is not created correctly
-- Lists are not supported yet, so a reduce will not function correctly
-- You can't add or remove from the UI
-- Horizontal scrolling is not yet available
-- There is no validation done that the json is valid certlogic
+Planned features:
+- [x] Select box only shows valid options (to be refined)
+- [x] Horizontal scrolling/zoom
+- [x] When updating the data using the UI, json structure is created/updated
+- [x] When updating the json, the UI structure is created/updated
+- [ ] Generate valid certlogic
+- [ ] You can't add or remove from the UI
+- [ ] There is no validation done that the json is valid certlogic
+- [ ] Entering DateTime with DatePicker
+- [ ] Show valid external values + meaning

@@ -31,8 +31,11 @@ class RulePart {
     } else if (value_ is num) {
       key = ValueNotifier(RuleSchemas.number);
       value = ValueNotifier(value_.toString());
-    } else {
+    } else if (value_ is String) {
       key = ValueNotifier(RuleSchemas.string);
+      value = ValueNotifier(value_.toString());
+    } else {
+      key = ValueNotifier(RuleSchemas.literal);
       value = ValueNotifier(value_.toString());
     }
   }
@@ -54,6 +57,13 @@ class RulePart {
           child.children = jsonElement.entries.map((jsonElementChild) => RulePart.fromJson(jsonElementChild, child)).toList();
           return child;
         }
+        if (jsonElement is List) {
+          final child = RulePart(key: ValueNotifier(RuleSchemas.list), parent: this);
+          child.children = jsonElement.map((jsonElementChild) {
+            return RulePart.fromJson((jsonElementChild as Map<String, dynamic>).entries.first, child);
+          }).toList();
+          return child;
+        }
         return RulePart.value(jsonElement, this);
       }).toList();
     } else {
@@ -65,7 +75,14 @@ class RulePart {
     final key_ = key.value.certLogic;
     if (key_.isEmpty) {
       if (child != null) return child!.toJson();
-      if (children != null) return children!.map((e) => e.toJson()).toList();
+      if (children != null) {
+        if (key.value.childrenAreList) {
+          return children!.map((e) => e.toJson()).toList();
+        } else {
+          return children!.map<Map>((e) => e.toJson()).toList().asMap().map((key, value) => MapEntry(value.keys.first, value.values.first));
+        }
+      }
+
       return value?.value.toString() ?? '';
     }
     if (child != null) return {key_: child!.toJson()};
@@ -81,18 +98,20 @@ class RulePart {
     key.addListener(onChangeData);
     if (children != null) {
       return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Select(
             label: key,
             allowedChildren: parent?.key.value.allowedChildren,
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.only(left: 16),
-              color: Colors.primaries[key.value.label.hashCode % Colors.primaries.length],
-              child: Column(
-                children: children!.map((e) => e.toWidget(onChangeData)).toList(),
-              ),
+          Container(
+            padding: const EdgeInsets.only(left: 16),
+            color: Colors.primaries[key.value.label.hashCode % Colors.primaries.length],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: children!.map((e) => e.toWidget(onChangeData)).toList(),
             ),
           ),
         ],
@@ -100,14 +119,14 @@ class RulePart {
     }
     if (child != null) {
       return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Select(
             label: key,
             allowedChildren: parent?.key.value.allowedChildren,
           ),
-          Expanded(
-            child: child!.toWidget(onChangeData),
-          ),
+          child!.toWidget(onChangeData),
         ],
       );
     }

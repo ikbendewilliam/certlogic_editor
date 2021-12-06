@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 class RuleSchema {
   final String label;
   final String certLogic;
+  final bool childrenAreList;
   List<RuleSchema> allowedChildren;
   bool hasChild;
   bool get hasChildren => allowedChildren.isNotEmpty && !hasChild;
@@ -12,10 +13,11 @@ class RuleSchema {
     this.label, {
     this.allowedChildren = const [],
     this.hasChild = false,
+    this.childrenAreList = true,
   });
 
   static RuleSchema fromCertLogic(String certLogic) {
-    return RuleSchemas.all.firstWhereOrNull((element) => element.certLogic == certLogic) ?? RuleSchemas.string;
+    return RuleSchemas.all.firstWhereOrNull((element) => element.certLogic == certLogic) ?? RuleSchemas.literal;
   }
 
   @override
@@ -59,10 +61,12 @@ class RuleSchemas {
     ];
     final logicChildren = [
       ...hasLogicChildren,
+      literal,
       object,
       string,
       number,
       boolean,
+      list,
       duration,
     ];
     logic.allowedChildren = logicChildren;
@@ -129,7 +133,9 @@ class RuleSchemas {
     logic,
   ];
 
-  static final object = RuleSchema('', 'Object');
+  static final object = RuleSchema('', 'Object', childrenAreList: false);
+  static final literal = RuleSchema('', 'Literal');
+  static final list = RuleSchema('', 'List');
   static final string = RuleSchema('', 'String');
   static final number = RuleSchema('', 'Number');
   static final boolean = RuleSchema('', 'Boolean');
@@ -144,7 +150,7 @@ class RuleSchemas {
   static final certificateType = RuleSchema('CertificateType', 'Certificate type');
   static final language = RuleSchema('lang', 'Language');
   static final descriptionDescription = RuleSchema('desc', 'Description');
-  static final descriptionChild = RuleSchema('', 'Description object', allowedChildren: [language, descriptionDescription]);
+  static final descriptionChild = RuleSchema('', 'Description object', allowedChildren: [language, descriptionDescription], childrenAreList: false);
   static final description = RuleSchema('Description', 'Description', allowedChildren: [descriptionChild]);
   static final validFrom = RuleSchema('ValidFrom', 'Valid From');
   static final validTo = RuleSchema('ValidTo', 'Valid To');

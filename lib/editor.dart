@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:cert_logic_editor/rule_part.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditorScreen extends StatefulWidget {
   const EditorScreen({Key? key}) : super(key: key);
@@ -69,32 +71,101 @@ class EditorScreenState extends State<EditorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        mainAxisSize: MainAxisSize.max,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (jsonError != null) ...[
+            Container(
+              width: double.maxFinite,
+              color: Colors.red,
+              padding: const EdgeInsets.all(4),
+              child: Text(
+                'An error occured: $jsonError',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
           Expanded(
-            child: TextField(
-              controller: jsonController,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              expands: true,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: jsonController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    expands: true,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: InteractiveViewer(
+                    constrained: false,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: transformToWidget(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(),
-              ),
-              child: ListView(
+          Container(
+            height: 2,
+            color: Colors.black,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(4),
+            child: SelectableText(
+              'Paste your json on the left side, edit it on the right. Update textfields by pressing ctrl+enter after editing it.',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: SelectableText.rich(
+              TextSpan(
+                style: const TextStyle(fontSize: 18),
                 children: [
-                  if (jsonError != null) ...[
-                    Container(
-                      color: Colors.red,
-                      child: Text('An error occured: $jsonError'),
-                    ),
-                  ],
-                  ...transformToWidget(),
+                  TextSpan(
+                    text: 'Source code on GitHub',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        launch('https://github.com/ikbendewilliam/certlogic_editor', webOnlyWindowName: '_self');
+                      },
+                  ),
+                  const TextSpan(
+                    text: ' | ',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  TextSpan(
+                    text: 'More on CertLogic',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        launch('https://github.com/ehn-dcc-development/dgc-business-rules/blob/main/certlogic/README.md', webOnlyWindowName: '_self');
+                      },
+                  ),
+                  const TextSpan(
+                    text: ' | ',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  TextSpan(
+                    text: 'CertLogic validator',
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        launch('https://certlogic-fiddle.vercel.app/', webOnlyWindowName: '_self');
+                      },
+                  ),
                 ],
               ),
             ),

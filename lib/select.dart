@@ -40,7 +40,7 @@ class _SelectState extends State<Select> {
       onChanged: (newValue) {
         if (!mounted) return;
         setState(() {
-          label?.value = newValue ?? RuleSchemas.string;
+          label?.value = newValue ?? RuleSchemas.literal;
         });
       },
       value: label?.value,
